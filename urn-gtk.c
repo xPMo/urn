@@ -680,7 +680,22 @@ static void close_activated(GSimpleAction *action,
 static void quit_activated(GSimpleAction *action,
                            GVariant      *parameter,
                            gpointer       app) {
-    g_application_quit(G_APPLICATION(app));
+
+  // save the game before quitting
+  GList *windows;
+  UrnAppWindow *win;
+  windows = gtk_application_get_windows(GTK_APPLICATION(app));
+  if (windows) {
+    win = URN_APP_WINDOW(windows->data);
+  } else {
+    win = urn_app_window_new(URN_APP(app));
+  }
+  if (win->game && win->timer) {
+    urn_game_update_splits(win->game, win->timer);
+    save_game(win->game);
+  }
+
+  g_application_quit(G_APPLICATION(app));
 }
 
 static GActionEntry app_entries[] = {
