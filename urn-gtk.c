@@ -2,7 +2,10 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <unistd.h>
+#include <stdio.h>
 #include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/un.h>
 #include <sys/stat.h>
 #include <pwd.h>
 #include <gtk/gtk.h>
@@ -333,6 +336,70 @@ static void keybind_toggle_decorations(const char *str, UrnAppWindow *win) {
     toggle_decorations(win);
 }
 
+
+static int starts_with(char* string, char* prefix) {
+  size_t string_length = strlen(string);
+  size_t prefix_length = strlen(prefix);
+  return prefix_length > string_length ? 0 : strncmp(string, prefix, prefix_length) == 0;
+}
+
+static gpointer socket_thread(gpointer data) {
+  UrnAppWindow* win = data;
+
+  printf("Opening communication socket at /tmp/urn\n");
+
+  int socket_fd = socket(AF_LOCAL, SOCK_STREAM, 0);
+  if (socket_fd < 0) {
+    printf("error opening socket");
+    return NULL;
+  }
+
+  unlink("/tmp/urn");
+
+  struct sockaddr_un socket_addr;
+  memset(&socket_addr, 0, sizeof(socket_addr));
+  socket_addr.sun_family = AF_LOCAL;
+  strncpy(socket_addr.sun_path, "/tmp/urn", sizeof(socket_addr.sun_path)-1);
+  if (bind(socket_fd, (struct sockaddr*) &socket_addr, sizeof(socket_addr))) {
+    printf("error binding socket\n");
+    return NULL;
+  }
+
+  listen(socket_fd, 5);
+
+  while (1) {
+    int client_fd = accept(socket_fd, NULL, NULL);
+    char command[256];
+    bzero(command, 256);
+    int bytes_read = read(client_fd, command, 255);
+    if (bytes_read < 0) {
+      perror("error reading from socket");
+      return NULL;
+    }
+
+    if (starts_with(command, "restart")) {
+      if (win->timer)
+        if (win->timer->running)
+          timer_stop_reset(win);
+      timer_stop_reset(win);
+      timer_start_split(win);
+    } else if (starts_with(command, "stop")) {
+      if (win->timer)
+        if (win->timer->running)
+          timer_stop_reset(win);
+    } else if (starts_with(command, "split")) {
+      timer_start_split(win);
+    } else {
+      printf("unknown command: %s\n", command);
+    }
+
+    close(client_fd);
+  }
+
+  printf("socket thread done\n");
+  return NULL;
+}
+
 static gboolean urn_app_window_keypress(GtkWidget *widget,
                                         GdkEvent *event,
                                         gpointer data) {
@@ -381,6 +448,8 @@ static void urn_app_window_init(UrnAppWindow *win) {
 
     win->display = gdk_display_get_default();
     win->style = NULL;
+
+    g_thread_new("socket_thread", socket_thread, win);
 
     // make data path
     pw = getpwuid(getuid());
