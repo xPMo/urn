@@ -349,6 +349,13 @@ static gboolean urn_app_window_keypress(GtkWidget *widget,
         timer_skip(win);
     else if (keybind_match(win->keybind_toggle_decorations, event->key))
         toggle_decorations(win);
+    else if (keybind_match(parse_keybind("<Control>s"), event->key)) {
+      if (win->game && win->timer) {
+        urn_game_update_splits(win->game, win->timer);
+        save_game(win->game);
+      }
+    }
+
     return TRUE;
 }
 
