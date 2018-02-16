@@ -26,14 +26,19 @@
       <summary>Global hotkeys</summary>
       <description>Enables global hotkeys for timer controls.</description>
     </key>
+    <key name="keybind-continue-split" type="s">
+      <default>'End'</default>
+      <summary>Continue/split keybind</summary>
+      <description>Key for starting / splitting the timer, disregarding pause.</description>
+    </key>
     <key name="keybind-start-split" type="s">
       <default>'space'</default>
       <summary>Start/split keybind</summary>
       <description>Key for starting / splitting the timer.</description>
     </key>
     <key name="keybind-split" type="s">
-      <default>''</default>
-      <summary>Start/split keybind</summary>
+      <default>'Home'</default>
+      <summary>Split keybind</summary>
       <description>Key for splitting the timer.</description>
     </key>
     <key name="keybind-stop-reset" type="s">

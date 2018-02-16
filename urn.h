@@ -72,6 +72,8 @@ int urn_timer_create(urn_timer **timer_ptr, urn_game *game);
 
 void urn_timer_release(urn_timer *timer);
 
+int urn_timer_continue(urn_timer *timer);
+
 int urn_timer_start(urn_timer *timer);
 
 void urn_timer_step(urn_timer *timer, long long now);
