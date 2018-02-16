@@ -50,6 +50,7 @@ struct _UrnAppWindow {
     GtkCssProvider *style;
     gboolean hide_cursor;
     gboolean global_hotkeys;
+    Keybind keybind_continue_split;
     Keybind keybind_start_split;
     Keybind keybind_split;
     Keybind keybind_stop_reset;
@@ -229,6 +230,25 @@ static gboolean urn_app_window_resize(GtkWidget *widget,
     return FALSE;
 }
 
+// will _continue_ timer as if never paused, unlike _start_
+static void timer_continue_split(UrnAppWindow *win) {
+    if (win->timer) {
+        GList *l;
+        if (!win->timer->running) {
+            if (urn_timer_continue(win->timer)) {
+                save_game(win->game);
+            }
+        } else {
+            urn_timer_split(win->timer);
+        }
+        for (l = win->components; l != NULL; l = l->next) {
+            UrnComponent *component = l->data;
+            if (component->ops->start_split)
+                component->ops->start_split(component, win->timer);
+        }
+    }
+}
+
 static void timer_start_split(UrnAppWindow *win) {
     if (win->timer) {
         GList *l;
@@ -323,6 +343,10 @@ static void timer_unsplit(UrnAppWindow *win) {
 static void toggle_decorations(UrnAppWindow *win) {
     gtk_window_set_decorated(GTK_WINDOW(win), !win->decorated);
     win->decorated = !win->decorated;
+}
+
+static void keybind_continue_split(GtkWidget *widget, UrnAppWindow *win) {
+    timer_continue_split(win);
 }
 
 static void keybind_start_split(GtkWidget *widget, UrnAppWindow *win) {
@@ -422,7 +446,9 @@ static gboolean urn_app_window_keypress(GtkWidget *widget,
                                         GdkEvent *event,
                                         gpointer data) {
     UrnAppWindow *win = (UrnAppWindow*)data;
-    if (keybind_match(win->keybind_start_split, event->key))
+    if (keybind_match(win->keybind_continue_split, event->key))
+        timer_continue_split(win);
+    else if (keybind_match(win->keybind_start_split, event->key))
         timer_start_split(win);
     else if (keybind_match(win->keybind_split, event->key))
         timer_split(win);
@@ -480,6 +506,8 @@ static void urn_app_window_init(UrnAppWindow *win) {
     GSettings *settings = g_settings_new("wildmouse.urn");
     win->hide_cursor = g_settings_get_boolean(settings, "hide-cursor");
     win->global_hotkeys = g_settings_get_boolean(settings, "global-hotkeys");
+    win->keybind_continue_split = parse_keybind(
+	g_settings_get_string(settings, "keybind-continue-split"));
     win->keybind_start_split = parse_keybind(
 	g_settings_get_string(settings, "keybind-start-split"));
     win->keybind_split = parse_keybind(
@@ -537,6 +565,10 @@ static void urn_app_window_init(UrnAppWindow *win) {
 
     if (win->global_hotkeys) {
         keybinder_init();
+        keybinder_bind(
+            g_settings_get_string(settings, "keybind-continue-split"),
+            (KeybinderHandler)keybind_continue_split,
+            win);
         keybinder_bind(
             g_settings_get_string(settings, "keybind-start-split"),
             (KeybinderHandler)keybind_start_split,
