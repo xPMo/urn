@@ -431,6 +431,10 @@ static gpointer socket_thread(gpointer data) {
       timer_start_split(win);
     } else if (starts_with(command, "split")) {
       timer_split(win);
+    } else if (starts_with(command, "unsplit")) {
+      timer_unsplit(win);
+    } else if (starts_with(command, "skipsplit")) {
+      timer_skip(win);
     } else {
       printf("unknown command: %s\n", command);
     }
