@@ -8,6 +8,7 @@ It was originally written because there were no exisiting
 solutions for split tracking with a delayed start available
 on \*nix platforms.
 
+<<<<<<< HEAD
 This repo was forked from [Rogach/urn](https://github.com/Rogach/urn)
 to utilize their work on socket support.
 
@@ -19,7 +20,29 @@ uses.
 *When it's ready™*, I will send a PR from
 [my `dev` branch](https://github.com/xPMo/urn/tree/dev).
 
+# Quick Start
+
 Urn requires `libgtk+-3.0`, `x11` and `libjansson`.
+
+Installing Urn requires `imagemagick`.
+
+On a Debian-based system, you can typically use these commands to
+compile, install, and run Urn:
+
+```
+sudo apt install build-essential libgtk-3-dev libjansson-dev imagemagick
+git clone https://github.com/3snowp7im/urn
+cd urn
+git submodule update --init
+make
+sudo make install
+/usr/local/bin/urn-gtk
+```
+
+Urn requires a well-formed JSON splits file to be used. You can either
+create this using the specifications below, edit the sample splits
+file provided in ```splits/sotn.json```, or download a splits file in
+Urn format from a web service like [splits.io](https://splits.io/).
 
 # Usage
 
@@ -94,6 +117,7 @@ The color of a time or delta has special meaning.
 * Must contain one main object
 * All keys are optional
 * Times are strings in HH:MM:SS.mmmmmm format
+* See ```splits/sotn.json``` for an example
 
 ## Main object
 
@@ -102,6 +126,7 @@ The color of a time or delta has special meaning.
 | title         | Title string at top of window         |
 | start_delay   | Non-negative delay until timer starts |
 | world_record  | Best known time                       |
+| attempt_count | Number of attempts                    |
 | splits        | Array of split objects                |
 | theme         | Window theme                          |
 | theme_variant | Window theme variant                  |
@@ -147,7 +172,7 @@ For a list of supported CSS properties, see
 | .current-split          |
 | .split-title            |
 | .split-time             |
-| .split-delta            | 
+| .split-delta            |
 | .split-last             |
 | .done                   |
 | .behind                 |
@@ -155,8 +180,8 @@ For a list of supported CSS properties, see
 | .best-segment           |
 | .best-split             |
 | .footer                 |
-| .prev-segment-label |
-| .prev-segment       |
+| .prev-segment-label     |
+| .prev-segment           |
 | .sum-of-bests-label     |
 | .sum-of-bests           |
 | .personal-best-label    |
@@ -169,4 +194,4 @@ name derived from its title. Specifically, the title is lowercased
 and all non-alphanumeric characters are replaced with hyphens, and
 the result is concatenated with ```split-title-```. For instance,
 if your split is titled "First split", it can be styled by
-targeting the CSS class ```.split-title-first-split```.
+targeting the CSS class `.split-title-first-split`.
