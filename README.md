@@ -28,11 +28,16 @@ by pressing right ```Control```.
 
 The timer is controlled by key presses:
 
-| Key        | Stopped | Started |
-|------------|---------|---------|
-| Spacebar   | Start   | Split   |
-| Backspace  | Reset   | Stop    |
-| Delete     | Cancel  | -       |
+| Key        | Stopped  | Started    |
+|------------|----------|------------|
+| Spacebar   | Start    | Split      |
+| End        | Continue | Split      |
+| Home       | Split    | Split      |
+| Backspace  | Reset    | Stop/Pause |
+| Delete     | Cancel   | -          |
+
+Start will continue the timer from the paused time.  Continue
+will continue the timer as if it was never paused.
 
 Cancel will reset the timer and decrement the attempt counter.
 A run that is reset before the start delay is automatically
@@ -58,6 +63,7 @@ the values in ```wildmouse.urn``` path with ```gsettings```.
 | global-hotkeys             | Boolean | Enables global hotkeys            |
 | theme                      | String  | Default theme name                |
 | theme-variant              | String  | Default theme variant             |
+| keybind-continue-split     | String  | Continue/split keybind            |
 | keybind-start-split        | String  | Start/split keybind               |
 | keybind-split              | String  | Split keybind                     |
 | keybind-stop-reset         | String  | Stop/Reset keybind                |

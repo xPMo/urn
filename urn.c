@@ -568,7 +568,24 @@ void urn_timer_step(urn_timer *timer, long long now) {
     }
 }
 
+//urn_timer_start: the timer was paused, update start time
 int urn_timer_start(urn_timer *timer) {
+    if (timer->curr_split < timer->game->split_count) {
+        if (!timer->start_time) {
+            timer->start_time = timer->now + timer->game->start_delay;
+            ++*timer->attempt_count;
+            timer->started = 1;
+        }
+        else if(!timer->running) {
+            timer->start_time = timer->now - timer->time;
+        }
+        timer->running = 1;
+    }
+    return timer->running;
+}
+
+// urn_timer_continue: continue as if the timer was never stopped
+int urn_timer_continue(urn_timer *timer) {
     if (timer->curr_split < timer->game->split_count) {
         if (!timer->start_time) {
             timer->start_time = timer->now + timer->game->start_delay;
@@ -624,7 +641,7 @@ int urn_timer_split(urn_timer *timer) {
 }
 
 int urn_timer_skip(urn_timer *timer) {
-    if (timer->running && timer->time > 0) {
+    if (timer->time > 0) {
         if (timer->curr_split < timer->game->split_count) {
             timer->split_times[timer->curr_split] = 0;
             timer->split_deltas[timer->curr_split] = 0;
@@ -647,9 +664,6 @@ int urn_timer_unsplit(urn_timer *timer) {
             timer->split_info[i] = 0;
             timer->segment_times[i] = timer->game->segment_times[i];
             timer->segment_deltas[i] = 0;
-        }
-        if (timer->curr_split + 1 == timer->game->split_count) {
-            timer->running = 1;
         }
         return timer->curr_split;
     }
