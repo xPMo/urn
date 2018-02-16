@@ -6,9 +6,20 @@
 This simple split tracker was hacked together by 3snow p7im.
 It was originally written because there were no exisiting
 solutions for split tracking with a delayed start available
-on *nix platforms.
+on \*nix platforms.
 
-Urn requires ```libgtk+-3.0```, ```x11``` and ```libjansson```.
+This repo was forked from [Rogach/urn](https://github.com/Rogach/urn)
+to utilize their work on socket support.
+
+The goal of this fork is to add support for timer pausing,
+and to improve socket support, using the same syntax that
+[Livesplit.Server](https://github.com/LiveSplit/LiveSplit.Server)
+uses.
+
+*When it's ready™*, I will send a PR from
+[my `dev` branch](https://github.com/xPMo/urn/tree/dev).
+
+Urn requires `libgtk+-3.0`, `x11` and `libjansson`.
 
 # Usage
 
