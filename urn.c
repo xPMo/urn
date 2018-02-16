@@ -568,7 +568,24 @@ void urn_timer_step(urn_timer *timer, long long now) {
     }
 }
 
+//urn_timer_start: the timer was paused, update start time
 int urn_timer_start(urn_timer *timer) {
+    if (timer->curr_split < timer->game->split_count) {
+        if (!timer->start_time) {
+            timer->start_time = timer->now + timer->game->start_delay;
+            ++*timer->attempt_count;
+            timer->started = 1;
+        }
+        else if(!timer->running) {
+            timer->start_time = timer->now - timer->time;
+        }
+        timer->running = 1;
+    }
+    return timer->running;
+}
+
+// urn_timer_continue: continue as if the timer was never stopped
+int urn_timer_continue(urn_timer *timer) {
     if (timer->curr_split < timer->game->split_count) {
         if (!timer->start_time) {
             timer->start_time = timer->now + timer->game->start_delay;
