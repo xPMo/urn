@@ -641,7 +641,7 @@ int urn_timer_split(urn_timer *timer) {
 }
 
 int urn_timer_skip(urn_timer *timer) {
-    if (timer->running && timer->time > 0) {
+    if (timer->time > 0) {
         if (timer->curr_split < timer->game->split_count) {
             timer->split_times[timer->curr_split] = 0;
             timer->split_deltas[timer->curr_split] = 0;
@@ -664,9 +664,6 @@ int urn_timer_unsplit(urn_timer *timer) {
             timer->split_info[i] = 0;
             timer->segment_times[i] = timer->game->segment_times[i];
             timer->segment_deltas[i] = 0;
-        }
-        if (timer->curr_split + 1 == timer->game->split_count) {
-            timer->running = 1;
         }
         return timer->curr_split;
     }
