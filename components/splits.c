@@ -323,6 +323,11 @@ void splits_start_split(UrnComponent *self, urn_timer *timer)
     splits_scroll_to_split(self, timer);
 }
 
+void splits_split(UrnComponent *self, urn_timer *timer)
+{
+    splits_scroll_to_split(self, timer);
+}
+
 void splits_skip(UrnComponent *self, urn_timer *timer)
 {
     splits_scroll_to_split(self, timer);
@@ -340,6 +345,7 @@ UrnComponentOps urn_splits_operations = {
     .clear_game = splits_clear_game,
     .draw = splits_draw,
     .start_split = splits_start_split,
+    .split = splits_split,
     .skip = splits_skip,
     .unsplit = splits_unsplit
 };

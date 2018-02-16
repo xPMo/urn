@@ -31,6 +31,11 @@
       <summary>Start/split keybind</summary>
       <description>Key for starting / splitting the timer.</description>
     </key>
+    <key name="keybind-split" type="s">
+      <default>''</default>
+      <summary>Start/split keybind</summary>
+      <description>Key for splitting the timer.</description>
+    </key>
     <key name="keybind-stop-reset" type="s">
       <default>'BackSpace'</default>
       <summary>Stop/Reset keybind</summary>

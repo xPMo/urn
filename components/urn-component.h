@@ -26,6 +26,7 @@ struct _UrnComponentOps {
     void (*draw)(UrnComponent *self, urn_game *game, urn_timer *timer);
 
     void (*start_split)(UrnComponent *self, urn_timer *timer);
+    void (*split)(UrnComponent *self, urn_timer *timer);
     void (*skip)(UrnComponent *self, urn_timer *timer);
     void (*unsplit)(UrnComponent *self, urn_timer *timer);
     void (*stop_reset)(UrnComponent *self, urn_timer *timer);

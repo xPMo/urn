@@ -48,6 +48,7 @@ the values in ```wildmouse.urn``` path with ```gsettings```.
 | theme                      | String  | Default theme name                |
 | theme-variant              | String  | Default theme variant             |
 | keybind-start-split        | String  | Start/split keybind               |
+| keybind-split              | String  | Split keybind                     |
 | keybind-stop-reset         | String  | Stop/Reset keybind                |
 | keybind-cancel             | String  | Cancel keybind                    |
 | keybind-unsplit            | String  | Unsplit keybind                   |
