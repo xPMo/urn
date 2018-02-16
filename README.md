@@ -8,7 +8,6 @@ It was originally written because there were no exisiting
 solutions for split tracking with a delayed start available
 on \*nix platforms.
 
-<<<<<<< HEAD
 This repo was forked from [Rogach/urn](https://github.com/Rogach/urn)
 to utilize their work on socket support.
 
@@ -41,13 +40,13 @@ sudo make install
 
 Urn requires a well-formed JSON splits file to be used. You can either
 create this using the specifications below, edit the sample splits
-file provided in ```splits/sotn.json```, or download a splits file in
+file provided in `splits/sotn.json`, or download a splits file in
 Urn format from a web service like [splits.io](https://splits.io/).
 
 # Usage
 
 Initially the window is undecorated. You can toggle window decorations
-by pressing right ```Control```.
+by pressing right `Control`.
 
 The timer is controlled by key presses:
 
@@ -77,7 +76,7 @@ Keybinds can be configured by changing your gsettings.
 # Settings
 
 Currently there is no settings dialog, but you can change
-the values in ```wildmouse.urn``` path with ```gsettings```.
+the values in `wildmouse.urn` path with `gsettings`.
 
 | Key                        | Type    | Description                       |
 |----------------------------|---------|-----------------------------------|
@@ -117,7 +116,7 @@ The color of a time or delta has special meaning.
 * Must contain one main object
 * All keys are optional
 * Times are strings in HH:MM:SS.mmmmmm format
-* See ```splits/sotn.json``` for an example
+* See `splits/sotn.json` for an example
 
 ## Main object
 
@@ -145,12 +144,12 @@ The color of a time or delta has special meaning.
 # Themes
 
 Create a theme stylesheet and place it
-in ```~/.urn/themes/<name>/<name>.css``` where ```name```
+in `~/.urn/themes/<name>/<name>.css` where `name```
 is the name of your theme. You can set the global theme by
-changing the ```theme``` value in gsettings. Theme variants
-should follow the pattern ```<name>-<variant>.css```.
+changing the `theme` value in gsettings. Theme variants
+should follow the pattern `<name>-<variant>.css`.
 Your splits can apply their own themes by specifying
-a ```theme``` key in the main object.
+a `theme` key in the main object.
 
 For a list of supported CSS properties, see
 [GtkCssProvider](https://developer.gnome.org/gtk3/stable/GtkCssProvider.html).
@@ -189,9 +188,9 @@ For a list of supported CSS properties, see
 | .world-record-label     |
 | .world-record           |
 
-If a split has a ```title``` key, its UI element receives a class
+If a split has a `title` key, its UI element receives a class
 name derived from its title. Specifically, the title is lowercased
 and all non-alphanumeric characters are replaced with hyphens, and
-the result is concatenated with ```split-title-```. For instance,
+the result is concatenated with `split-title-`. For instance,
 if your split is titled "First split", it can be styled by
 targeting the CSS class `.split-title-first-split`.
