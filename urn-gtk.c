@@ -51,6 +51,7 @@ struct _UrnAppWindow {
     gboolean hide_cursor;
     gboolean global_hotkeys;
     Keybind keybind_start_split;
+    Keybind keybind_split;
     Keybind keybind_stop_reset;
     Keybind keybind_cancel;
     Keybind keybind_unsplit;
@@ -246,6 +247,18 @@ static void timer_start_split(UrnAppWindow *win) {
     }
 }
 
+static void timer_split(UrnAppWindow *win) {
+    if (win->timer) {
+        GList *l;
+        urn_timer_split(win->timer);
+        for (l = win->components; l != NULL; l = l->next) {
+            UrnComponent *component = l->data;
+            if (component->ops->split)
+                component->ops->split(component, win->timer);
+        }
+    }
+}
+
 static void timer_stop_reset(UrnAppWindow *win) {
     if (win->timer) {
         GList *l;
@@ -316,6 +329,10 @@ static void keybind_start_split(GtkWidget *widget, UrnAppWindow *win) {
     timer_start_split(win);
 }
 
+static void keybind_split(GtkWidget *widget, UrnAppWindow *win) {
+    timer_split(win);
+}
+
 static void keybind_stop_reset(const char *str, UrnAppWindow *win) {
     timer_stop_reset(win);
 }
@@ -377,18 +394,19 @@ static gpointer socket_thread(gpointer data) {
       return NULL;
     }
 
-    if (starts_with(command, "restart")) {
+    if (starts_with(command, "reset")) {
       if (win->timer)
         if (win->timer->running)
           timer_stop_reset(win);
       timer_stop_reset(win);
-      timer_start_split(win);
-    } else if (starts_with(command, "stop")) {
+    } else if (starts_with(command, "pause")) {
       if (win->timer)
         if (win->timer->running)
           timer_stop_reset(win);
-    } else if (starts_with(command, "split")) {
+    } else if (starts_with(command, "startorsplit")) {
       timer_start_split(win);
+    } else if (starts_with(command, "split")) {
+      timer_split(win);
     } else {
       printf("unknown command: %s\n", command);
     }
@@ -406,6 +424,8 @@ static gboolean urn_app_window_keypress(GtkWidget *widget,
     UrnAppWindow *win = (UrnAppWindow*)data;
     if (keybind_match(win->keybind_start_split, event->key))
         timer_start_split(win);
+    else if (keybind_match(win->keybind_split, event->key))
+        timer_split(win);
     else if (keybind_match(win->keybind_stop_reset, event->key))
         timer_stop_reset(win);
     else if (keybind_match(win->keybind_cancel, event->key))
@@ -462,6 +482,8 @@ static void urn_app_window_init(UrnAppWindow *win) {
     win->global_hotkeys = g_settings_get_boolean(settings, "global-hotkeys");
     win->keybind_start_split = parse_keybind(
 	g_settings_get_string(settings, "keybind-start-split"));
+    win->keybind_split = parse_keybind(
+	g_settings_get_string(settings, "keybind-split"));
     win->keybind_stop_reset = parse_keybind(
 	g_settings_get_string(settings, "keybind-stop-reset"));
     win->keybind_cancel = parse_keybind(
@@ -518,6 +540,10 @@ static void urn_app_window_init(UrnAppWindow *win) {
         keybinder_bind(
             g_settings_get_string(settings, "keybind-start-split"),
             (KeybinderHandler)keybind_start_split,
+            win);
+        keybinder_bind(
+            g_settings_get_string(settings, "keybind-split"),
+            (KeybinderHandler)keybind_split,
             win);
         keybinder_bind(
             g_settings_get_string(settings, "keybind-stop-reset"),

@@ -581,7 +581,7 @@ int urn_timer_start(urn_timer *timer) {
 }
 
 int urn_timer_split(urn_timer *timer) {
-    if (timer->running && timer->time > 0) {
+    if (timer->time > 0) {
         if (timer->curr_split < timer->game->split_count) {
             int i;
             // check for best split and segment
