@@ -17,7 +17,7 @@ and to improve socket support, using the same syntax that
 uses.
 
 *When it's ready™*, I will send a PR from
-[my `dev` branch](https://github.com/xPMo/urn/tree/dev).
+[my `socket` branch](https://github.com/xPMo/urn/tree/socket).
 
 # Quick Start
 
