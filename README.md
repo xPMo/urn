@@ -21,8 +21,7 @@ uses.
 
 # Quick Start
 
-Urn requires `libgtk+-3.0`, `x11` and `libjansson`.
-
+Urn requires `libgtk+-3.0`, `x11`, and `libjansson`.
 Installing Urn requires `imagemagick`.
 
 On a Debian-based system, you can typically use these commands to
